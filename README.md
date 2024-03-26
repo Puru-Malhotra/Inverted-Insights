@@ -1,16 +1,16 @@
 # Inverted-Insights
 
-Link to website
+# Link to website
 
 
 https://invertedinsights-46b56.web.app/
 
 
 
-Use the following access keys and codes for firebase:
+# Use the following access keys and codes for firebase:
 
 
-# NPM
+## NPM
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
@@ -35,7 +35,7 @@ const analytics = getAnalytics(app);
 
 
 
-# Script tag in HTML
+## Script tag in HTML
 <script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
