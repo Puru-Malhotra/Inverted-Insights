@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link rel="stylesheet" href="style.css" />
+  <<title>
+    </title>
+</head>
+
+<body>
+  <div class="container">
+    <button class="btn" id="yesButton" onclick="nextPage()">Yes</button>
+
+    <script>
+      var pathStrings = [];
+      document.addEventListener('DOMContentLoaded', function () {
+        
+        const uniqueRandomNumbers = generateUniqueRandomNumbers(5, 100);
+
+        uniqueRandomNumbers.forEach(number => {
+          pathStrings.push(`upright${number}`);
+          pathStrings.push(`inverted${number}`);
+        });
+
+
+        pathStrings = shuffleArray(pathStrings)
+
+        split()
+
+      });
+
+
+      function split(){
+        if(pathStrings.length === 0){
+          console.log("some random action");
+        }
+        else{
+          console.log(pathStrings.shift());
+        }
+        
+      }
+
+      function nextPage() {
+        split();
+      }
+
+      function generateUniqueRandomNumbers(totalNumbers, range) {
+        let numbers = Array.from({ length: range }, (_, i) => i);
+        numbers = shuffleArray(numbers);
+        return numbers.slice(0, totalNumbers);
+      }
+
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array
+    }
+    </script>
+
+
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+      import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+      const firebaseConfig = {
+        apiKey: "AIzaSyAvPWFGp1cjfZh8s9xSktdiL7tqXbgte60",
+        authDomain: "invertedinsights-46b56.firebaseapp.com",
+        projectId: "invertedinsights-46b56",
+        storageBucket: "invertedinsights-46b56.appspot.com",
+        messagingSenderId: "1012100634877",
+        appId: "1:1012100634877:web:c8929a3b45c012cba10694",
+        measurementId: "G-ZBC341J47L"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const analytics = getAnalytics(app);
+      const database = getDatabase(app);
+
+
+
+    </script>
+  </div>
+  </div>
+</body>
+
+</html>
