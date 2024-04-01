@@ -3,96 +3,382 @@
 
 <head>
   <link rel="stylesheet" href="style.css" />
-  <title>
-    </title>
+  <title>Inverted Insights</title>
 </head>
 
 <body>
-  <div class="container">
-    <button class="btn" id="yesButton" onclick="nextPage()">Yes</button>
+  <div id="demographics" class="demographics-container">
+    <h1 style="text-align: center; color: rgb(14, 145, 157)">
+      Please fill in your demographic information:
+    </h1>
+    <h3 style="color: rgb(14, 145, 157)">Age:</h3>
+    <label><input type="radio" name="age" value="under-18" />Under 18</label>
+    <label><input type="radio" name="age" value="18-30" />18-30</label>
+    <label><input type="radio" name="age" value="31-45" />31-45</label>
+    <label><input type="radio" name="age" value="46-60" />46-60</label>
+    <label><input type="radio" name="age" value="above-60" />Above 60</label>
 
-    <script>
-      var pathStrings = [];
-      document.addEventListener('DOMContentLoaded', function () {
+    <!-- Gender -->
+    <h3 style="color: rgb(14, 145, 157)">Gender:</h3>
+    <label><input type="radio" name="gender" value="male" />Male</label>
+    <label><input type="radio" name="gender" value="female" />Female</label>
+    <label><input type="radio" name="gender" value="other" />Other</label>
 
-        const uniqueRandomNumbers = generateUniqueRandomNumbers(5, 100);
+    <!-- Ethnicity/Race -->
+    <h3 style="color: rgb(14, 145, 157)">Ethnicity/Race:</h3>
+    <!-- Example options; consider adding more as appropriate -->
+    <label><input type="radio" name="ethnicity" value="asian" />Asian</label>
+    <label><input type="radio" name="ethnicity" value="black" />Black/African</label>
+    <label><input type="radio" name="ethnicity" value="hispanic" />Hispanic/Latino</label>
+    <label><input type="radio" name="ethnicity" value="white" />White</label>
+    <label><input type="radio" name="ethnicity" value="other" />Other</label>
 
-        uniqueRandoNumbers.forEach(number => {
-          pathStrings.push(`upright${number}`);
-          pathStrings.push(`inverted${number}`);
-        });
+    <!-- Educational Background -->
+    <h3 style="color: rgb(14, 145, 157)">Educational Background:</h3>
+    <!-- Example options -->
+    <label><input type="radio" name="education" value="high_school" />High
+      School</label>
+    <label><input type="radio" name="education" value="bachelor" />Bachelor's
+      Degree</label>
+    <label><input type="radio" name="education" value="master" />Master's
+      Degree</label>
+    <label><input type="radio" name="education" value="phd" />PhD or Higher</label>
+
+    <!-- Vision Quality -->
+    <h3 style="color: rgb(14, 145, 157)">Vision Quality:</h3>
+    <label><input type="radio" name="vision" value="normal" />Normal Vision</label>
+    <label><input type="radio" name="vision" value="corrected" />Corrected
+      (Glasses/Contacts)</label>
+    <label><input type="radio" name="vision" value="impaired" />Vision
+      Impaired</label>
+
+    <!-- Experience with Face Recognition Tasks -->
+    <h3 style="color: rgb(14, 145, 157)">
+      Experience with Face Recognition Tasks:
+    </h3>
+    <label><input type="radio" name="experience" value="none" />None</label>
+    <label><input type="radio" name="experience" value="some" />Some</label>
+    <label><input type="radio" name="experience" value="experienced" />Experienced</label>
+    <br /><br />
+    <button class="btn" id="beginButton">Begin</button>
+  </div>
+
+  <div class="container" style="display: none">
+    <!-- Image display area -->
+    <img id="surveyImage" src="" alt="Survey Image" style="max-width: 500px; display: block; margin: 20px auto" />
+
+    <div class="survey-container">
+      <!-- Survey question (hidden by default) -->
+      <div id="surveyQuestion" style="text-align: center; display: none">
+        <p>Did you recognize this person?</p>
+        <input type="radio" id="yes" name="recognition" value="yes" />
+        <label for="yes">Yes</label>
+        <input type="radio" id="no" name="recognition" value="no" />
+        <label for="no">No</label>
+        <input type="radio" id="maybe" name="recognition" value="maybe" />
+        <label for="no">Maybe</label>
+        <div id="nameInput" style="display: none">
+          <input type="text" id="celebrityName" placeholder="Enter celebrity name" />
+        </div>
+        <!-- Modified to use as Next button initially, then Submit -->
+        <button class="btn" id="nextButton">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+    import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvPWFGp1cjfZh8s9xSktdiL7tqXbgte60",
+      authDomain: "invertedinsights-46b56.firebaseapp.com",
+      projectId: "invertedinsights-46b56",
+      storageBucket: "invertedinsights-46b56.appspot.com",
+      messagingSenderId: "1012100634877",
+      appId: "1:1012100634877:web:c8929a3b45c012cba10694",
+      measurementId: "G-ZBC341J47L",
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const database = getDatabase(app);
+
+    const postListRef = ref(database, "test");
+    const newPostRef = push(postListRef);
+    var imageData = [];
+    var pathStrings = [
+      "https://drive.google.com/thumbnail?id=1okixlzwwEDAEIcvNmyZ29K8r266wOVc-",
+      "https://drive.google.com/thumbnail?id=1ne5WOWvcVdqPQO32DlKMOk1gwOEd7z6C",
+      "https://drive.google.com/thumbnail?id=1mERqLAke65xff3iz3PCXjI_MPLeuA32d",
+      "https://drive.google.com/thumbnail?id=1kLj0YXRZal8UK0wMbcIiqcy2mksSyVoL",
+      "https://drive.google.com/thumbnail?id=1hDF22MMBgtq0KQQpsd_uvVv8p2QuaQVB",
+      "https://drive.google.com/thumbnail?id=1giUR1MG6jJrx4KI-LHAOAN-254c5fKnc",
+      "https://drive.google.com/thumbnail?id=1g_S1DVXlInZPivBxXkmlpyPoP9uGTyCE",
+      "https://drive.google.com/thumbnail?id=1eNZisMoRfG7J64zGvj24DICqUV3sGqip",
+      "https://drive.google.com/thumbnail?id=1e7yxzihrepiA8-i8d-LCZF-5V435pSl_",
+      "https://drive.google.com/thumbnail?id=1ddjG3E8EGjy7duQ4a3rNw-i8Fg2D-dPD",
+      "https://drive.google.com/thumbnail?id=1ZYFDWFqNkCyWQBljMstBq-5pVQ9r2wrE",
+      "https://drive.google.com/thumbnail?id=1YFpBhwB4HvSVR-GAupI1Ry6FKpqRpRMX",
+      "https://drive.google.com/thumbnail?id=1WcX8-q-37TIaRYwnp97Y9jZyNmfsutOL",
+      "https://drive.google.com/thumbnail?id=1VUbCw0_QUwahkwKwPSmGjRzkMoHaER52",
+      "https://drive.google.com/thumbnail?id=1VNRewjCgfz73ROwj1hN9fCdJCksGDijy",
+      "https://drive.google.com/thumbnail?id=1UP3hOXBaTr1NVLFGQLjEgy7gP7-VUZKb",
+      "https://drive.google.com/thumbnail?id=1SkVBEne4YLkZ1HCAbvyoiTPbzfH_Prf2",
+      "https://drive.google.com/thumbnail?id=1QMm9wbNRMv3l2Z-8Ep-tm44QJdUZVtnJ",
+      "https://drive.google.com/thumbnail?id=1PqJRzRm3wHg-OS3u0h56eHokXDwj_6bc",
+      "https://drive.google.com/thumbnail?id=1O2ppcTC_147UKCV1ZQK7J2V1Anz-Sv4n",
+      "https://drive.google.com/thumbnail?id=1LIbX_GLBW_3XSNJKHHzjpOyk-b8Jb1ON",
+      "https://drive.google.com/thumbnail?id=1HwK1T3scBTQW17W8HdTkLXnPWGirw0uN",
+      "https://drive.google.com/thumbnail?id=1HC60IwUv2jDkfChEtFQOBbXSM0TyJgP5",
+      "https://drive.google.com/thumbnail?id=18eziVH4_KNSW5JMVZUv2ytfDzOiTP6-e",
+      "https://drive.google.com/thumbnail?id=15diQS_gwDg9CJXflZm66N2F0GHWLpBG9",
+      "https://drive.google.com/thumbnail?id=14qzto_VqLQPlUGUqCe5N62RNzg6NADwQ",
+      "https://drive.google.com/thumbnail?id=12v3g7X8wsuOCyI0X9pwf74UGH4E2Phm_",
+      "https://drive.google.com/thumbnail?id=11Oc1kijFSvFQMd82PnWUuQDat3igPjGj",
+      "https://drive.google.com/thumbnail?id=1zj4o-7pTDWPmqvSXreDi8izN0b8wLtrr",
+      "https://drive.google.com/thumbnail?id=1yYhOYwiqvuB-KSUE-Dbb7bHrGGVwv5jU",
+      "https://drive.google.com/thumbnail?id=1wfL4htwC3jPlnew6jxlxJGFXgp3WUEGY",
+      "https://drive.google.com/thumbnail?id=1ufwj3V2n_1EQhX9uFuzr7C-iwG7si3Pz",
+      "https://drive.google.com/thumbnail?id=1u-6bpS1-1gih3qJr46RhwmybD0Vv4a4v",
+      "https://drive.google.com/thumbnail?id=1tomMu9stM07jcAvtOiRYmJjBlF4X6FAx",
+      "https://drive.google.com/thumbnail?id=1tDXA9CKRYurmOqRquEEsMHvI11XmhWnf",
+      "https://drive.google.com/thumbnail?id=1sFuhyuYc-nH0MXZuF1oVc-F5vyW-IWSv",
+      "https://drive.google.com/thumbnail?id=1pv4iNeNLTfcx6fxjxXYf14ESXIg2ovrm",
+      "https://drive.google.com/thumbnail?id=1ms5urFkqrDWRbsXwsHRzq8bacaPiieHa",
+      "https://drive.google.com/thumbnail?id=1lS-2Ke0AzQUxclygUhedjuKoh4AZTFxv",
+      "https://drive.google.com/thumbnail?id=1kaCP0R996ANUtbujFCvZV438Fmj7LUxQ",
+      "https://drive.google.com/thumbnail?id=1gU4qh0Acc9BsadjnHwFmJ8wyF58jMwRq",
+      "https://drive.google.com/thumbnail?id=1dtaXWDf7ZF5wnbJKA6GsQm_v7AacDX6o",
+      "https://drive.google.com/thumbnail?id=1cMbf3u11YNsC2yLjWV1AqYTFAKv8xwBl",
+      "https://drive.google.com/thumbnail?id=1bF9zcuJ3WzLcGsAmkZ78jLvbzvifDpFW",
+      "https://drive.google.com/thumbnail?id=1aV9Vs-DlX5fTvv6sSCBDGUtHKeCybNGG",
+      "https://drive.google.com/thumbnail?id=1aOFnu3kgnTKknHNMlz40I7by-cmwT0NI",
+      "https://drive.google.com/thumbnail?id=1ZdjzjZ-pCetuXTTxtw9Al32gnhbZWXpV",
+      "https://drive.google.com/thumbnail?id=1XrzH0ay7oCxYB-h69TZMCuktDeE3h0A6",
+      "https://drive.google.com/thumbnail?id=1Tu5zbbrqmiTKu760fO0l3sRbMMAML5OU",
+      "https://drive.google.com/thumbnail?id=1TA07qXR6TB1AstzlCaoqOKGGqe-9_N-Y",
+      "https://drive.google.com/thumbnail?id=1QhX9WxK0a_kqA58CkRp39iSHX217LOUw",
+      "https://drive.google.com/thumbnail?id=1QKrHM-dmrj0VmDIymUPavWnmWQmNnM4y",
+      "https://drive.google.com/thumbnail?id=1MKr0XND0QjYgStHYhEYAAp98yXWu5Npq",
+      "https://drive.google.com/thumbnail?id=1J9JtlHWYJAYsrSLMY1C0aQZKEOW8cr7k",
+      "https://drive.google.com/thumbnail?id=1IZ7rSHzczWKP-D6qfHfQORF-vowaZhjr",
+      "https://drive.google.com/thumbnail?id=1DWStvT9pvPTYBnHBf9kHfcUlh13eYk3D",
+      "https://drive.google.com/thumbnail?id=1CXqSYARDas_8zXIXEMeAnSgKymaQrgd6",
+      "https://drive.google.com/thumbnail?id=1ALs-5Z_F4LVEhLVjxa4N0TF7L_HGn6pu",
+      "https://drive.google.com/thumbnail?id=19iQn16qUIbtHl6frVT7qUKDaGtorG6zA",
+    ];
+
+    document.getElementById('beginButton').addEventListener('click', beginStudy);
+    document.getElementById('nextButton').addEventListener('click', nextPage);
 
 
-        pathStrings = shuffleArray(pathStrings)
 
-        split()
+    var currentImageIndex = 0;
+    var testingSamples = 10;
+    var responses = []; // To store survey responses
+    document.addEventListener("DOMContentLoaded", function () {
+      // only prepare the demographic form, do not load images yet
+      const uniqueRandomNumbers = generateUniqueRandomNumbers(
+        5,
+        pathStrings.length
+      );
+      uniqueRandomNumbers.forEach((number) => {
+        imageData.push([`${pathStrings[number]}`, "scaleX(-1) scaleY(-1)"]);
+        imageData.push([`${pathStrings[number]}`, "scaleX(1) scaleY(1)"]);
+        imageData = shuffleArray(imageData);
+      });
+    });
 
+    function generateUniqueRandomNumbers(totalNumbers, range) {
+      let numbers = Array.from({ length: range }, (_, i) => i);
+      numbers = shuffleArray(numbers);
+      return numbers.slice(0, totalNumbers);
+    }
+
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array
+    }
+
+    function beginStudy() {
+      // Hide the demographics section
+      document.getElementById("demographics").style.display = "none";
+
+      // Show the container for the image and survey
+      document.querySelector(".container").style.display = "flex";
+
+      // Proceed to load the first image
+      loadNextImage();
+    }
+
+    function loadNextImage() {
+      if (currentImageIndex < testingSamples) {
+        // Initially hide the survey question until the image is displayed and then hidden
+        document.getElementById("surveyQuestion").style.display = "none";
+
+        var imgPath = imageData.shift();
+        document.getElementById("surveyImage").src = imgPath[0];
+        document.getElementById("surveyImage").style.transform = imgPath[1];
+        document.getElementById("surveyImage").style.display = "block"; // Make sure the image is visible
+
+        // Wait for 2000 ms, then hide the image and show the survey question
+        setTimeout(function () {
+          document.getElementById("surveyImage").style.display = "none"; // Hide the image
+          document.getElementById("surveyQuestion").style.display = "block"; // Show survey question after image is hidden
+        }, 2000);
+
+        resetSurveyForm();
+      } else {
+        // After the last image, prepare to submit responses
+        prepareSubmit();
+      }
+    }
+
+    function nextPage() {
+      // Hide the image to prepare for the next action
+      document.getElementById("surveyImage").style.display = "none";
+
+      // Collect the recognition response
+      var recognitionInput = document.querySelector(
+        'input[name="recognition"]:checked'
+      );
+      var recognition = recognitionInput ? recognitionInput.value : "";
+      var name =
+        recognition === "yes" || recognition === "maybe"
+          ? document.getElementById("celebrityName").value
+          : "";
+
+      // Store the response
+      responses.push({
+        imageIndex: currentImageIndex,
+        recognized: recognition,
+        name: name,
       });
 
+      // Clear the input for the next round
+      document.getElementById("celebrityName").value = "";
 
-      function split() {
-        if (pathStrings.length === 0) {
-          console.log("some random action");
-        }
-        else {
-          console.log(pathStrings.shift());
-        }
+      // Increment the image index to move to the next image
+      currentImageIndex++;
 
-        //const image = document.getElementById('my-image');
-        //image.src = 'new-image.jpg';
-
+      // Check if there are more images to display
+      if (currentImageIndex < testingSamples) {
+        loadNextImage(); // Load the next image
+      } else {
+        // No more images, prepare to submit responses
+        prepareSubmit();
       }
+    }
 
-      function nextPage() {
-        split();
-      }
-
-      function generateUniqueRandomNumbers(totalNumbers, range) {
-        let numbers = Array.from({ length: range }, (_, i) => i);
-        numbers = shuffleArray(numbers);
-        return numbers.slice(0, totalNumbers);
-      }
-
-      function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array
-      }
-    </script>
-
-
-
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-      import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
-      import { getDatabase, ref, set, push } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-database.js";
-      // TODO: Add SDKs for Firebase products that you want to use
-      // https://firebase.google.com/docs/web/setup#available-libraries
-
-      // Your web app's Firebase configuration
-      // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-      const firebaseConfig = {
-        apiKey: "AIzaSyAvPWFGp1cjfZh8s9xSktdiL7tqXbgte60",
-        authDomain: "invertedinsights-46b56.firebaseapp.com",
-        projectId: "invertedinsights-46b56",
-        storageBucket: "invertedinsights-46b56.appspot.com",
-        messagingSenderId: "1012100634877",
-        appId: "1:1012100634877:web:c8929a3b45c012cba10694",
-        measurementId: "G-ZBC341J47L"
+    function prepareSubmit() {
+      // Change the button text to "Submit"
+      document.getElementById("nextButton").textContent = "Submit";
+      // Change the onclick function to submitResponses
+      document.getElementById("nextButton").onclick = function () {
+        submitResponses();
       };
+      // Optionally, you could hide the survey question here or leave it if you want a final action from the user
+      // document.getElementById("surveyQuestion").style.display = "none";
+    }
 
-      // Initialize Firebase
-      const app = initializeApp(firebaseConfig);
-      const analytics = getAnalytics(app);
-      const database = getDatabase(app);
+    const radioButtons = document.querySelectorAll('input[type="radio"][name="recognition"]');
+    radioButtons.forEach(radio => {
+      radio.addEventListener('change', function () {
+        handleRecognitionChange();
+      });
+    });
+
+    function handleRecognitionChange() {
+      //console.log("hellllooooooooo");
+      var recognition = document.querySelector(
+        'input[name="recognition"]:checked'
+      ).value;
+      document.getElementById("nameInput").style.display =
+        recognition === "yes" || recognition === "maybe" ? "block" : "none";
+    }
+
+    function resetSurveyForm() {
+      // Resets radio buttons and hides the name input field
+      //document.getElementById("surveyQuestion").reset();
+      document.getElementById("nameInput").style.display = "none";
+      document.getElementById("celebrityName").value = ""; // Clears the celebrity name textbox
+    }
+
+    function submitResponses() {
+      //console.log("Submitting responses:", responses);
+      // Here you would handle submitting the responses to a server or another destination
+
+      // After submitting the data, clear the content and display a thank-you message
+
+      // Hide the survey container
+      document.querySelector(".container").style.display = "none";
+
+      getFormData();
+
+      // Create a thank-you message element
+      var thankYouMessage = document.createElement("div");
+      thankYouMessage.setAttribute("id", "thankYouMessage");
+      thankYouMessage.innerHTML =
+        "<h2>Thank You!</h2><h5>Your responses have been submitted successfully.</h5>";
+      thankYouMessage.style.textAlign = "center";
+      thankYouMessage.style.marginTop = "50px";
+
+      // Append the thank-you message to the body or a specific container
+      document.body.appendChild(thankYouMessage);
+
+      // Optionally, style the message directly here or in your CSS
+      thankYouMessage.style.position = "fixed";
+      thankYouMessage.style.left = "50%";
+      thankYouMessage.style.top = "50%";
+      thankYouMessage.style.transform = "translate(-50%, -50%)";
+      thankYouMessage.style.fontSize = "20px";
+      thankYouMessage.style.color = "#017cff";
+      thankYouMessage.style.backgroundColor = "#fff";
+      thankYouMessage.style.padding = "20px";
+      thankYouMessage.style.borderRadius = "10px";
+      thankYouMessage.style.boxShadow = "0 4px 8px rgb(14, 145, 157)";
+    }
+
+    function getFormData() {
+      const Age = document.querySelector('input[name="age"]:checked').value;
+      const Gender = document.querySelector('input[name="gender"]:checked').value;
+      const Ethnicity = document.querySelector('input[name="ethnicity"]:checked').value;
+      const Education = document.querySelector('input[name="education"]:checked').value;
+      const Vision = document.querySelector('input[name="vision"]:checked').value;
+      const Experience = document.querySelector('input[name="experience"]:checked').value;
 
 
+      let date = new Date().toJSON();
+      set(newPostRef, {
+        Age: Age,
+        Gender: Gender,
+        Ethnicity: Ethnicity,
+        Education: Education,
+        Vision: Vision,
+        Experience: Experience,
+        Responses: responses,
+        timestamp: date
+      }).then(() => {
+        console.log('Thank you for your valuable input');
+      }).catch((error) => {
+        console.error('Error writing message to Firebase Database', error);
+      });
+    }
 
-    </script>
-  </div>
-  </div>
+
+  </script>
+
+
 </body>
 
 </html>
