@@ -231,11 +231,11 @@
         document.getElementById("surveyImage").style.transform = imgPath[1];
         document.getElementById("surveyImage").style.display = "block"; // Make sure the image is visible
 
-        // Wait for 2000 ms, then hide the image and show the survey question
+        // Wait for 3500 ms, then hide the image and show the survey question
         setTimeout(function () {
           document.getElementById("surveyImage").style.display = "none"; // Hide the image
           document.getElementById("surveyQuestion").style.display = "block"; // Show survey question after image is hidden
-        }, 2000);
+        }, 3500);
 
         resetSurveyForm();
       } else {
