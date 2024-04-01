@@ -1,134 +1,148 @@
 body {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+	background: linear-gradient(rgb(0, 249, 236), rgb(71, 150, 229));
+	margin: 0; /* Remove default margin */
+	padding: 20px; /* Add some padding */
+}
+
+.container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-
-  background: linear-gradient(rgb(0, 249, 236), rgb(71, 150, 229));
+  flex-direction: column; /* Align children vertically */
+  justify-content: center; /* Center children vertically */
+  align-items: center; /* Center children horizontally */
+  width: 100%; /* Use full available width */
+  max-width: 1200px; /* Max width for the container */
+  margin: 0 auto; /* Center the container itself if less than 100% width */
 }
 
-#noButton {
-  position: absolute;
-  margin-left: 150px;
-  transition: 0.5s;
-  margin-top: 30px;
+/* Image display area */
+#surveyImage {
+	width: 50%; /* Half of the container width */
+	max-width: 500px; /* Maximum width of the image */
+	height: auto; /* Maintain aspect ratio */
+  
 }
 
-#yesButton {
-  position: absolute;
-  margin-right: 150px;
-  margin-top: 30px;
+/* Survey area styling */
+#surveyQuestion {
+	width: 50%; /* Half of the container width */
+	padding: 20px; /* Padding around the survey questions */
+	box-sizing: border-box; /* Include padding in the element's total width */
 }
 
-#yesBut{
-  margin-right: 100px;
-}
-.header_text {
-  font-family: "Nunito";
-  font-size: 50px;
-  font-weight: bold;
-
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  color: #ffffff;
-}
-
+/* Adjustments for existing styles */
+.header_text,
 .text {
-  font-family: "Nunito";
-  font-size: 25px;
-  font-weight: bold;
-  color: white;
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 0px;
+	width: 100%; /* Full width of their container */
+	margin: 0 0 20px; /* Adjust margin to only bottom */
 }
 
-.buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
-  margin-left: 20px;
-}
-
-.btn {
-  background-color: #017cff;
-  color: white;
-  font-weight: 600;
-  padding: 15px 32px;
-  text-align: center;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border: none;
-  border-radius: 12px;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 3px 3px black;
+.btn,
+.followup,
+.input-container {
+	background-color: #017cff;
+	color: white;
+	font-weight: 600;
+	padding: 15px 32px;
+	text-align: center;
+	display: inline-block;
+	font-size: 16px;
+	margin: 4px 2px;
+	cursor: pointer;
+	border: none;
+	border-radius: 12px;
+	transition: background-color 0.3s ease;
+	box-shadow: 0 3px 3px black;
 }
 
 .btn:hover {
-  background-color: #ffffff;
-  color: #017cff;
+	background-color: #ffffff;
+	color: #017cff;
 }
 
-.gif_container {
+.input-container,
+.buttons {
+	flex-direction: column; /* Stack buttons and inputs vertically */
+	align-items: center; /* Center-align the child elements */
+}
+
+/* Specific styles for radio buttons and labels */
+input[type="radio"] {
+	margin-right: 10px;
+}
+
+label {
+	margin-right: 20px; /* Space between labels */
+}
+
+/* Visibility toggle for name input */
+#nameInput {
+	margin-top: 20px; /* Space above the name input */
+}
+
+/* Ensure labels and inputs are aligned correctly */
+label,
+input[type="text"],
+input[type="radio"] {
+	cursor: pointer;
+	font-family: "Nunito", sans-serif;
+	color: rgb(0, 0, 0);
+  margin-bottom: 20px;
+}
+
+input[type="text"] {
+	border: 2px solid #017cff; /* Blue border for text input */
+	background-color: transparent;
+	color: white;
+	padding: 10px;
+	border-radius: 12px;
+	width: 80%; /* Responsive width */
+	margin-top: 10px; /* Space above the text input */
+}
+.survey-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 40px;
-}
-.input-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column; /* Stack them vertically */
-}
-.container {
-  text-align: center;
+  width: 50%; /* Match width of surveyQuestion for alignment */
 }
 
-.followup {
-  display: none;
-  margin-top: 10px;
-}
-
-.radio-container {
-  position: relative;
-  display: inline-block;
-}
-
-.popover {
-  visibility: hidden;
-  width: 200px;
-  background-color: black;
-  color: white;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px 0;
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  margin-left: -100px;
-}
-
-.radio-container:hover .popover {
-  visibility: visible;
-}
-
-.radio-group{
-  text-align: justify;
-}
 p {
-  color: white;
-  margin-left: 50%;
+  font-weight: bolder;
+	color: rgb(255, 255, 255);
+	font-size: 30px;
+	margin-bottom: 20px;
 }
-p a {
-  color: rgb(255, 255, 255);
-  font-size: 20px;
-  font-weight: 600;
-  opacity: 0.25;
+
+
+
+.demographics-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 700px; /* Adjust as per your layout needs */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align items to the start of the container */
+  margin: 20px auto; /* Center the container on the page */
+}
+
+.demographics-container h1, .demographics-container h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.demographics-container label {
+  display: block; /* Each label on its own line for clarity */
+  margin: 5px 0; /* Space between each label */
+  cursor: pointer;
+}
+
+.demographics-container input[type="radio"] {
+  margin-right: 10px; /* Space between radio button and its label */
 }
