@@ -60,7 +60,7 @@
     <label><input type="radio" name="experience" value="some" />Some</label>
     <label><input type="radio" name="experience" value="experienced" />Experienced</label>
     <br /><br />
-    <button class="btn" id="beginButton">Begin</button>
+    <button class="btn" id="beginButton" disabled>Begin</button>
   </div>
 
   <div class="container" style="display: none">
@@ -81,7 +81,7 @@
           <input type="text" id="celebrityName" placeholder="Enter celebrity name" />
         </div>
         <!-- Modified to use as Next button initially, then Submit -->
-        <button class="btn" id="nextButton">Next</button>
+        <button class="btn" id="nextButton" disabled>Next</button>
       </div>
     </div>
   </div>
@@ -220,21 +220,23 @@
       // Proceed to load the first image
       loadNextImage();
     }
-
+    var startTime = 0
+    var endTime = 0
     function loadNextImage() {
       if (currentImageIndex < testingSamples) {
         // Initially hide the survey question until the image is displayed and then hidden
-        document.getElementById("surveyQuestion").style.display = "none";
 
         var imgPath = imageData.shift();
         document.getElementById("surveyImage").src = imgPath[0];
         document.getElementById("surveyImage").style.transform = imgPath[1];
+        document.getElementById("surveyQuestion").style.display = "none";
         document.getElementById("surveyImage").style.display = "block"; // Make sure the image is visible
 
         // Wait for 3500 ms, then hide the image and show the survey question
         setTimeout(function () {
           document.getElementById("surveyImage").style.display = "none"; // Hide the image
           document.getElementById("surveyQuestion").style.display = "block"; // Show survey question after image is hidden
+          startTime = performance.now()
         }, 3500);
 
         resetSurveyForm();
@@ -247,7 +249,7 @@
     function nextPage() {
       // Hide the image to prepare for the next action
       document.getElementById("surveyImage").style.display = "none";
-
+      endTime = performance.now();
       // Collect the recognition response
       var recognitionInput = document.querySelector(
         'input[name="recognition"]:checked'
@@ -258,11 +260,13 @@
           ? document.getElementById("celebrityName").value
           : "";
 
+      var responseTime = endTime - startTime
       // Store the response
       responses.push({
         imageIndex: currentImageIndex,
         recognized: recognition,
         name: name,
+        ResponseTime: responseTime,
       });
 
       // Clear the input for the next round
@@ -295,6 +299,7 @@
     radioButtons.forEach(radio => {
       radio.addEventListener('change', function () {
         handleRecognitionChange();
+        enableRecognitionChange();
       });
     });
 
@@ -310,8 +315,14 @@
     function resetSurveyForm() {
       // Resets radio buttons and hides the name input field
       //document.getElementById("surveyQuestion").reset();
+      var ele = document.getElementsByName("recognition");
+      for (var i = 0; i < ele.length; i++){
+        ele[i].checked = false;
+      }
+        
       document.getElementById("nameInput").style.display = "none";
       document.getElementById("celebrityName").value = ""; // Clears the celebrity name textbox
+      document.getElementById("nextButton").disabled = true;
     }
 
     function submitResponses() {
@@ -375,6 +386,36 @@
       });
     }
 
+    function checkDemographicsFilled() {
+      const ageChecked = document.querySelector('input[name="age"]:checked');
+      const genderChecked = document.querySelector('input[name="gender"]:checked');
+      const ethnicityChecked = document.querySelector('input[name="ethnicity"]:checked');
+      const educationChecked = document.querySelector('input[name="education"]:checked');
+      const visionChecked = document.querySelector('input[name="vision"]:checked');
+      const experienceChecked = document.querySelector('input[name="experience"]:checked');
+    
+      const allFilled = ageChecked && genderChecked && ethnicityChecked && educationChecked && visionChecked && experienceChecked;
+      document.getElementById('beginButton').disabled = !allFilled;
+    }
+    
+    const demographicInputs = document.querySelectorAll('#demographics input[type="radio"]');
+    demographicInputs.forEach(input => {
+      input.addEventListener('change', checkDemographicsFilled);
+    });
+
+    function enableRecognitionChange() {
+      var recognition = document.querySelector('input[name="recognition"]:checked').value;
+      var nameInput = document.getElementById("celebrityName").value;
+      var enableNext = recognition && ((recognition === "yes" || recognition === "maybe") ? nameInput.trim() !== "" : true);
+    
+      document.getElementById("nextButton").disabled = !enableNext;
+      document.getElementById("nameInput").style.display = recognition === "yes" || recognition === "maybe" ? "block" : "none";
+    }
+    
+    // Add an event listener for the name input field to handle the enabling/disabling of the Next button
+    document.getElementById("celebrityName").addEventListener("input", enableRecognitionChange);
+    //document.getElementById("recognition").addEventListener('change', enableRecognitionChange);
+    
 
   </script>
 
