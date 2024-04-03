@@ -63,6 +63,13 @@ body {
 	color: #017cff;
 }
 
+.btn:disabled {
+	background-color: #cccccc; /* Gray background */
+	color: #666666; /* Dark gray text */
+	cursor: not-allowed; /* 'Not allowed' cursor */
+	opacity: 0.5; /* 50% opacity */
+  }
+  
 .input-container,
 .buttons {
 	flex-direction: column; /* Stack buttons and inputs vertically */
