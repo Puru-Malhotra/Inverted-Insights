@@ -21,8 +21,9 @@ body {
 /* Image display area */
 #surveyImage {
 	width: 50%; /* Half of the container width */
-	max-width: 500px; /* Maximum width of the image */
+	/* max-width: 500px; Maximum width of the image */
 	height: auto; /* Maintain aspect ratio */
+	filter: grayscale(100%);
   
 }
 
