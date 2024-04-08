@@ -13,9 +13,10 @@
     </h1>
     <h3 style="color: rgb(14, 145, 157)">Age:</h3>
     <label><input type="radio" name="age" value="under-18" />Under 18</label>
-    <label><input type="radio" name="age" value="18-30" />18-30</label>
-    <label><input type="radio" name="age" value="31-45" />31-45</label>
-    <label><input type="radio" name="age" value="46-60" />46-60</label>
+    <label><input type="radio" name="age" value="18-24" />18-24</label>
+    <label><input type="radio" name="age" value="25-34" />25-34</label>
+    <label><input type="radio" name="age" value="35-44" />35-44</label>
+    <label><input type="radio" name="age" value="45-60" />45-60</label>
     <label><input type="radio" name="age" value="above-60" />Above 60</label>
 
     <!-- Gender -->
@@ -110,70 +111,11 @@
     const analytics = getAnalytics(app);
     const database = getDatabase(app);
 
-    const postListRef = ref(database, "test");
+    const postListRef = ref(database, "prod");
     const newPostRef = push(postListRef);
     var imageData = [];
-    var pathStrings = [
-      "https://drive.google.com/thumbnail?id=1okixlzwwEDAEIcvNmyZ29K8r266wOVc-",
-      "https://drive.google.com/thumbnail?id=1ne5WOWvcVdqPQO32DlKMOk1gwOEd7z6C",
-      "https://drive.google.com/thumbnail?id=1mERqLAke65xff3iz3PCXjI_MPLeuA32d",
-      "https://drive.google.com/thumbnail?id=1kLj0YXRZal8UK0wMbcIiqcy2mksSyVoL",
-      "https://drive.google.com/thumbnail?id=1hDF22MMBgtq0KQQpsd_uvVv8p2QuaQVB",
-      "https://drive.google.com/thumbnail?id=1giUR1MG6jJrx4KI-LHAOAN-254c5fKnc",
-      "https://drive.google.com/thumbnail?id=1g_S1DVXlInZPivBxXkmlpyPoP9uGTyCE",
-      "https://drive.google.com/thumbnail?id=1eNZisMoRfG7J64zGvj24DICqUV3sGqip",
-      "https://drive.google.com/thumbnail?id=1e7yxzihrepiA8-i8d-LCZF-5V435pSl_",
-      "https://drive.google.com/thumbnail?id=1ddjG3E8EGjy7duQ4a3rNw-i8Fg2D-dPD",
-      "https://drive.google.com/thumbnail?id=1ZYFDWFqNkCyWQBljMstBq-5pVQ9r2wrE",
-      "https://drive.google.com/thumbnail?id=1YFpBhwB4HvSVR-GAupI1Ry6FKpqRpRMX",
-      "https://drive.google.com/thumbnail?id=1WcX8-q-37TIaRYwnp97Y9jZyNmfsutOL",
-      "https://drive.google.com/thumbnail?id=1VUbCw0_QUwahkwKwPSmGjRzkMoHaER52",
-      "https://drive.google.com/thumbnail?id=1VNRewjCgfz73ROwj1hN9fCdJCksGDijy",
-      "https://drive.google.com/thumbnail?id=1UP3hOXBaTr1NVLFGQLjEgy7gP7-VUZKb",
-      "https://drive.google.com/thumbnail?id=1SkVBEne4YLkZ1HCAbvyoiTPbzfH_Prf2",
-      "https://drive.google.com/thumbnail?id=1QMm9wbNRMv3l2Z-8Ep-tm44QJdUZVtnJ",
-      "https://drive.google.com/thumbnail?id=1PqJRzRm3wHg-OS3u0h56eHokXDwj_6bc",
-      "https://drive.google.com/thumbnail?id=1O2ppcTC_147UKCV1ZQK7J2V1Anz-Sv4n",
-      "https://drive.google.com/thumbnail?id=1LIbX_GLBW_3XSNJKHHzjpOyk-b8Jb1ON",
-      "https://drive.google.com/thumbnail?id=1HwK1T3scBTQW17W8HdTkLXnPWGirw0uN",
-      "https://drive.google.com/thumbnail?id=1HC60IwUv2jDkfChEtFQOBbXSM0TyJgP5",
-      "https://drive.google.com/thumbnail?id=18eziVH4_KNSW5JMVZUv2ytfDzOiTP6-e",
-      "https://drive.google.com/thumbnail?id=15diQS_gwDg9CJXflZm66N2F0GHWLpBG9",
-      "https://drive.google.com/thumbnail?id=14qzto_VqLQPlUGUqCe5N62RNzg6NADwQ",
-      "https://drive.google.com/thumbnail?id=12v3g7X8wsuOCyI0X9pwf74UGH4E2Phm_",
-      "https://drive.google.com/thumbnail?id=11Oc1kijFSvFQMd82PnWUuQDat3igPjGj",
-      "https://drive.google.com/thumbnail?id=1zj4o-7pTDWPmqvSXreDi8izN0b8wLtrr",
-      "https://drive.google.com/thumbnail?id=1yYhOYwiqvuB-KSUE-Dbb7bHrGGVwv5jU",
-      "https://drive.google.com/thumbnail?id=1wfL4htwC3jPlnew6jxlxJGFXgp3WUEGY",
-      "https://drive.google.com/thumbnail?id=1ufwj3V2n_1EQhX9uFuzr7C-iwG7si3Pz",
-      "https://drive.google.com/thumbnail?id=1u-6bpS1-1gih3qJr46RhwmybD0Vv4a4v",
-      "https://drive.google.com/thumbnail?id=1tomMu9stM07jcAvtOiRYmJjBlF4X6FAx",
-      "https://drive.google.com/thumbnail?id=1tDXA9CKRYurmOqRquEEsMHvI11XmhWnf",
-      "https://drive.google.com/thumbnail?id=1sFuhyuYc-nH0MXZuF1oVc-F5vyW-IWSv",
-      "https://drive.google.com/thumbnail?id=1pv4iNeNLTfcx6fxjxXYf14ESXIg2ovrm",
-      "https://drive.google.com/thumbnail?id=1ms5urFkqrDWRbsXwsHRzq8bacaPiieHa",
-      "https://drive.google.com/thumbnail?id=1lS-2Ke0AzQUxclygUhedjuKoh4AZTFxv",
-      "https://drive.google.com/thumbnail?id=1kaCP0R996ANUtbujFCvZV438Fmj7LUxQ",
-      "https://drive.google.com/thumbnail?id=1gU4qh0Acc9BsadjnHwFmJ8wyF58jMwRq",
-      "https://drive.google.com/thumbnail?id=1dtaXWDf7ZF5wnbJKA6GsQm_v7AacDX6o",
-      "https://drive.google.com/thumbnail?id=1cMbf3u11YNsC2yLjWV1AqYTFAKv8xwBl",
-      "https://drive.google.com/thumbnail?id=1bF9zcuJ3WzLcGsAmkZ78jLvbzvifDpFW",
-      "https://drive.google.com/thumbnail?id=1aV9Vs-DlX5fTvv6sSCBDGUtHKeCybNGG",
-      "https://drive.google.com/thumbnail?id=1aOFnu3kgnTKknHNMlz40I7by-cmwT0NI",
-      "https://drive.google.com/thumbnail?id=1ZdjzjZ-pCetuXTTxtw9Al32gnhbZWXpV",
-      "https://drive.google.com/thumbnail?id=1XrzH0ay7oCxYB-h69TZMCuktDeE3h0A6",
-      "https://drive.google.com/thumbnail?id=1Tu5zbbrqmiTKu760fO0l3sRbMMAML5OU",
-      "https://drive.google.com/thumbnail?id=1TA07qXR6TB1AstzlCaoqOKGGqe-9_N-Y",
-      "https://drive.google.com/thumbnail?id=1QhX9WxK0a_kqA58CkRp39iSHX217LOUw",
-      "https://drive.google.com/thumbnail?id=1QKrHM-dmrj0VmDIymUPavWnmWQmNnM4y",
-      "https://drive.google.com/thumbnail?id=1MKr0XND0QjYgStHYhEYAAp98yXWu5Npq",
-      "https://drive.google.com/thumbnail?id=1J9JtlHWYJAYsrSLMY1C0aQZKEOW8cr7k",
-      "https://drive.google.com/thumbnail?id=1IZ7rSHzczWKP-D6qfHfQORF-vowaZhjr",
-      "https://drive.google.com/thumbnail?id=1DWStvT9pvPTYBnHBf9kHfcUlh13eYk3D",
-      "https://drive.google.com/thumbnail?id=1CXqSYARDas_8zXIXEMeAnSgKymaQrgd6",
-      "https://drive.google.com/thumbnail?id=1ALs-5Z_F4LVEhLVjxa4N0TF7L_HGn6pu",
-      "https://drive.google.com/thumbnail?id=19iQn16qUIbtHl6frVT7qUKDaGtorG6zA",
-    ];
+    var pathStrings = ['https://drive.google.com/thumbnail?id=1vqmxyrCGBygZ0fZzWjFEgFBNd3S8fpHr', 'https://drive.google.com/thumbnail?id=1bItl8LHcKQhWw7rzAywx4pEpnIXgnnFv', 'https://drive.google.com/thumbnail?id=1t51L2VbS0AhAadb_QfpyUzWsDON1wijX', 'https://drive.google.com/thumbnail?id=1LXIiBw1LN3ITPwm9FGYhWlsf8LZfMVLb', 'https://drive.google.com/thumbnail?id=1TJLxMeQvMB37MVHQ1yPeRqd1S4zgOmhV', 'https://drive.google.com/thumbnail?id=1s8Y7hoPb-gnIwFi6weK4pe_tH8-BXqrZ', 'https://drive.google.com/thumbnail?id=19Et1-y46NfEMWmRl22aDCH5CNBiNUof_', 'https://drive.google.com/thumbnail?id=1bXYZFZekYZAfawsbshU4xJ6Y5nTDXbjI', 'https://drive.google.com/thumbnail?id=1cyUAP3TOgBGvBLA_rfCgdK35Lhu1tjNn', 'https://drive.google.com/thumbnail?id=1tg5PAUQobYlvQCKC7xvtqC3EX_V1AD6_', 'https://drive.google.com/thumbnail?id=1cGHGdpfVpAFa6McsHo5-KgFws9LfIpNp', 'https://drive.google.com/thumbnail?id=18RqWNtEbpYMP7I__HakyOzFUlZ8fkP8-', 'https://drive.google.com/thumbnail?id=1sLrW4lzXHXl4KbFkcnBjfPHxGgDIzVf2', 'https://drive.google.com/thumbnail?id=1RLhvCc17v6nbmiQXsrofSLkZRcP-YmtF', 'https://drive.google.com/thumbnail?id=1rq88jGshzAqO0BsjCTOPKZGdsnE_zIhQ', 'https://drive.google.com/thumbnail?id=1I7Jr2QtwVI3QqJTCYy4caoC7uk_pJc7R', 'https://drive.google.com/thumbnail?id=19Pi3rHELY3hy8vdeoeIBJ6L2QTLPhKNP', 'https://drive.google.com/thumbnail?id=1wDbI8-VitlTwiL2hcBMnAJcj9tP01Lbi', 'https://drive.google.com/thumbnail?id=1qfz1lUz99_d4FyNnrt_sDcaNflBRjgbs', 'https://drive.google.com/thumbnail?id=1VCZUMEI-uMxYvp1cSS2mDAF7OKEqXLzi', 'https://drive.google.com/thumbnail?id=1ybEXeYJ3rYXeKZE2Dhux6AmkpDkySsbu', 'https://drive.google.com/thumbnail?id=1LHzXuI2YRls0j9Ty-I4r3MWX2mQnKxst', 'https://drive.google.com/thumbnail?id=12oRxRjm7bid_zsa-awl9f4e8mP31ttMi', 'https://drive.google.com/thumbnail?id=1pSNLsUj5BaALyuoKIMinccFN__izvXMo', 'https://drive.google.com/thumbnail?id=1C2kPtsspTVW_i4aJjDucKXkmbM7wpbjr', 'https://drive.google.com/thumbnail?id=1a8AqBDjmj0gvU4qbqyYHL6tju0fcxbdn', 'https://drive.google.com/thumbnail?id=1E_ss_pjIXut_RkHmSWeuH_54YpAKWIN8', 'https://drive.google.com/thumbnail?id=1nuikvghmRPEAITifQMAQYqgcKsPyzVf0', 'https://drive.google.com/thumbnail?id=1X_aqhN7I24I1Y8qqiFrfAfYE9-ys4oaY', 'https://drive.google.com/thumbnail?id=195byPGgZOHktL__hD-ZZEb-Uw_CzJOtH', 'https://drive.google.com/thumbnail?id=1Oil8NySkov9EjPE6ACjFsOptSxjXKlAm', 'https://drive.google.com/thumbnail?id=1aDuTQ6Y3K7MvBb7g6rD3iLFV4UDJqT73', 'https://drive.google.com/thumbnail?id=10Twy9MoBjBltkaFlDVqQxuKqVOey44fU', 'https://drive.google.com/thumbnail?id=1wri6SkAFuCrSoQpaYgbPqqgudgV_5g2i', 'https://drive.google.com/thumbnail?id=1v-ygs1a-rzUwwF478mDuwKbS0kaez4z-', 'https://drive.google.com/thumbnail?id=1uvYZPuZhLRYEzZuaFq0vWucLxU58rDBI', 'https://drive.google.com/thumbnail?id=1q7HgXqqCTk7FMur4ISltMSL0ztDGn078', 'https://drive.google.com/thumbnail?id=1Qmdy5P1czQhWTwHKHQU-lNFI-CYY_Mpg', 'https://drive.google.com/thumbnail?id=1GeqSvfmrKX3tYWV0Ousj7_2g1MBIP8JN', 'https://drive.google.com/thumbnail?id=1m6S2kssU_fm4BwoLmDQriQFkMr6xIyJo', 'https://drive.google.com/thumbnail?id=1kbYWDq0cJC5_Cpm8tNWDEoWFD06uTBGm', 'https://drive.google.com/thumbnail?id=1DRH3PqMj5qkULW_8urOAMciW4DJFtAMZ', 'https://drive.google.com/thumbnail?id=13bu7VRInzwn-KpdXCfUp9rio4s7ixuFq', 'https://drive.google.com/thumbnail?id=1gcBuIhdyGkqmTci81LpMQIvDnA6BAbhw', 'https://drive.google.com/thumbnail?id=1GyZFIn_WkCR3I9Npml369X0ueBQkgfMe', 'https://drive.google.com/thumbnail?id=1xjX5qP8q9KnVJQUJm4Ji5Hf7JCO9MfGT', 'https://drive.google.com/thumbnail?id=1MVvjkKjcdbc47trrMMU_Rek02LPPp1D-', 'https://drive.google.com/thumbnail?id=1tmC1ZPNoSz4qZHSgdRtdl0X5tOiXAmJ1', 'https://drive.google.com/thumbnail?id=1g8CJnbdeRali1BxRKMyY1gqe6GTRRPS1', 'https://drive.google.com/thumbnail?id=1Aok23vAHqwHDKPSPR_fUg-9t6WF6iA_X', 'https://drive.google.com/thumbnail?id=19C-G_lo8_cbzJRr8lzfw_7n98SAhoqCa', 'https://drive.google.com/thumbnail?id=1aJWxlvpYv1MHG4qn4osPBhh9mnCsXcr7', 'https://drive.google.com/thumbnail?id=1hUOZ0wgMOQOYFW6TgHT3KkjP9sCVDbEX', 'https://drive.google.com/thumbnail?id=18Rj_M-IzZZ47HtK98_vqxXtZ45WOfDlZ', 'https://drive.google.com/thumbnail?id=1X9Kd9Qs3fi76xIxzGHEO--Ftb-fz5rYN', 'https://drive.google.com/thumbnail?id=1oOfCKWT_Pi8FA-47ebALpCfOlP49Jo7a', 'https://drive.google.com/thumbnail?id=1fSalku7Y04pcP4M5Z-8pma_VFUxkfomU', 'https://drive.google.com/thumbnail?id=1z3T3dv2ny7O-AUAQ6P8yDghiS2ptaS9H', 'https://drive.google.com/thumbnail?id=1wK0YaivriSu8Vd9UTAmAYh7z6dLNSNtc', 'https://drive.google.com/thumbnail?id=1vAM8CmuJDXt5dh2KryuBs6ViB9NFXR0v'];
+
 
     document.getElementById('beginButton').addEventListener('click', beginStudy);
     document.getElementById('nextButton').addEventListener('click', nextPage);
@@ -181,12 +123,12 @@
 
 
     var currentImageIndex = 0;
-    var testingSamples = 10;
+    var testingSamples = 40;
     var responses = []; // To store survey responses
     document.addEventListener("DOMContentLoaded", function () {
       // only prepare the demographic form, do not load images yet
       const uniqueRandomNumbers = generateUniqueRandomNumbers(
-        5,
+        20,
         pathStrings.length
       );
       uniqueRandomNumbers.forEach((number) => {
@@ -222,22 +164,25 @@
     }
     var startTime = 0
     var endTime = 0
+    var imgPath = [];
     function loadNextImage() {
       if (currentImageIndex < testingSamples) {
         // Initially hide the survey question until the image is displayed and then hidden
 
-        var imgPath = imageData.shift();
+        imgPath = imageData.shift();
         document.getElementById("surveyImage").src = imgPath[0];
         document.getElementById("surveyImage").style.transform = imgPath[1];
+        //document.getElementById("surveyImage").style.filter = "grayscale(100%)";
         document.getElementById("surveyQuestion").style.display = "none";
-        document.getElementById("surveyImage").style.display = "block"; // Make sure the image is visible
+        setTimeout(function(){document.getElementById("surveyImage").style.display = "block";},500)
+         // Make sure the image is visible
 
         // Wait for 3500 ms, then hide the image and show the survey question
         setTimeout(function () {
           document.getElementById("surveyImage").style.display = "none"; // Hide the image
           document.getElementById("surveyQuestion").style.display = "block"; // Show survey question after image is hidden
           startTime = performance.now()
-        }, 3500);
+        }, 3000);
 
         resetSurveyForm();
       } else {
@@ -263,7 +208,7 @@
       var responseTime = endTime - startTime
       // Store the response
       responses.push({
-        imageIndex: currentImageIndex,
+        imagePath: imgPath,
         recognized: recognition,
         name: name,
         ResponseTime: responseTime,
@@ -316,10 +261,10 @@
       // Resets radio buttons and hides the name input field
       //document.getElementById("surveyQuestion").reset();
       var ele = document.getElementsByName("recognition");
-      for (var i = 0; i < ele.length; i++){
+      for (var i = 0; i < ele.length; i++) {
         ele[i].checked = false;
       }
-        
+
       document.getElementById("nameInput").style.display = "none";
       document.getElementById("celebrityName").value = ""; // Clears the celebrity name textbox
       document.getElementById("nextButton").disabled = true;
@@ -393,11 +338,11 @@
       const educationChecked = document.querySelector('input[name="education"]:checked');
       const visionChecked = document.querySelector('input[name="vision"]:checked');
       const experienceChecked = document.querySelector('input[name="experience"]:checked');
-    
+
       const allFilled = ageChecked && genderChecked && ethnicityChecked && educationChecked && visionChecked && experienceChecked;
       document.getElementById('beginButton').disabled = !allFilled;
     }
-    
+
     const demographicInputs = document.querySelectorAll('#demographics input[type="radio"]');
     demographicInputs.forEach(input => {
       input.addEventListener('change', checkDemographicsFilled);
@@ -407,15 +352,15 @@
       var recognition = document.querySelector('input[name="recognition"]:checked').value;
       var nameInput = document.getElementById("celebrityName").value;
       var enableNext = recognition && ((recognition === "yes" || recognition === "maybe") ? nameInput.trim() !== "" : true);
-    
+
       document.getElementById("nextButton").disabled = !enableNext;
       document.getElementById("nameInput").style.display = recognition === "yes" || recognition === "maybe" ? "block" : "none";
     }
-    
+
     // Add an event listener for the name input field to handle the enabling/disabling of the Next button
     document.getElementById("celebrityName").addEventListener("input", enableRecognitionChange);
     //document.getElementById("recognition").addEventListener('change', enableRecognitionChange);
-    
+
 
   </script>
 
